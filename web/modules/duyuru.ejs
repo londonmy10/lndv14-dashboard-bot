@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Yayın Duyuru Ayarları</title>
+    <style>
+        body { background: #0f172a; color: white; font-family: sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+    <div class="max-w-3xl mx-auto">
+        <a href="/manage/<%= guild.id %>" class="text-gray-400 hover:text-white transition flex items-center mb-8">
+            ← Panele Dön
+        </a>
+
+        <div class="glass p-10 rounded-[2.5rem] shadow-2xl">
+            <h1 class="text-3xl font-black mb-2 text-indigo-400">Yayın Duyuru Sistemi</h1>
+            <p class="text-gray-400 mb-8 text-sm">Takip etmek istediğin platformu ve kanalı belirle.</p>
+
+            <form action="/manage/<%= guild.id %>/duyuru/kaydet" method="POST" class="space-y-6">
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Platform Seç</label>
+                    <select name="platform" class="w-full bg-slate-800 border border-white/10 p-4 rounded-2xl text-white outline-none focus:border-indigo-500 transition">
+                        <option value="youtube" <%= db.get(`duyuru_platform_${guild.id}`) === 'youtube' ? 'selected' : '' %>>YouTube</option>
+                        <option value="twitch" <%= db.get(`duyuru_platform_${guild.id}`) === 'twitch' ? 'selected' : '' %>>Twitch</option>
+                        <option value="kick" <%= db.get(`duyuru_platform_${guild.id}`) === 'kick' ? 'selected' : '' %>>Kick</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Kanal ID / Kullanıcı Adı</label>
+                    <input type="text" name="yayinci_id" value="<%= db.get(`duyuru_yayinci_${guild.id}`) || '' %>" placeholder="Örn: UC... veya twitch_adi" class="w-full bg-slate-800 border border-white/10 p-4 rounded-2xl text-white outline-none focus:border-indigo-500 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Duyuru Yapılacak Discord Kanalı</label>
+                    <select name="duyuru_kanali" class="w-full bg-slate-800 border border-white/10 p-4 rounded-2xl text-white outline-none focus:border-indigo-500 transition">
+                        <% guild.channels.cache.filter(c => c.type === 0).forEach(channel => { %>
+                            <option value="<%= channel.id %>" <%= db.get(`duyuru_kanal_${guild.id}`) === channel.id ? 'selected' : '' %>># <%= channel.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 rounded-2xl font-bold text-white transition shadow-lg shadow-indigo-600/20">
+                    Ayarları Kaydet
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

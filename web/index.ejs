@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LND Bot | Legends Never Die</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #0b0f1a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+        .gradient-text { background: linear-gradient(90deg, #3b82f6, #2dd4bf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .hero-glow { position: absolute; top: -10%; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%); z-index: -1; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+    <div class="hero-glow"></div>
+
+<!-- Navigasyon Başlangıç -->
+<nav class="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
+    <!-- Logo Alanı -->
+    <div class="text-2xl font-black tracking-tighter gradient-text">LND BOT</div>
+    
+    <!-- Orta Linkler -->
+    <div class="hidden md:flex space-x-8 font-medium">
+        <a href="/" class="hover:text-blue-400 transition">Ana Sayfa</a>
+        <a href="/commands" class="hover:text-blue-400 transition">Komutlar</a>
+        <a href="https://discord.gg/7T2FNXaUZx" target="_blank" class="hover:text-blue-400 transition">Destek</a>
+        <a href="/iletisim" class="hover:text-blue-400 transition">İletişim</a>
+    </div>
+
+<script>
+function copyDiscord() {
+    const discordUser = "senuzulme"; // Buraya kendi kullanıcı adını yaz
+    navigator.clipboard.writeText(discordUser);
+    
+    const toast = document.getElementById('copyToast');
+    toast.style.opacity = '1';
+    setTimeout(() => {
+        toast.style.opacity = '0';
+    }, 2000);
+}
+</script>
+
+    <!-- Kullanıcı Paneli (Dropdown) -->
+    <div class="flex items-center">
+        <% if(user) { %>
+            <div class="relative inline-block text-left group">
+                <!-- Kullanıcı Butonu -->
+                <button class="flex items-center space-x-3 bg-white/5 p-1 pr-4 rounded-full border border-white/10 hover:bg-white/10 transition">
+                    <!-- Kullanıcı Avatarı -->
+                    <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" class="w-8 h-8 rounded-full border border-blue-500" alt="Avatar">
+                    <!-- Kullanıcı Adı -->
+                    <span class="text-sm font-semibold"><%= user.username %></span>
+                    <!-- Aşağı Ok İkonu -->
+                    <svg class="w-4 h-4 text-gray-400 group-hover:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <!-- Açılır Menü (Dropdown) -->
+                <div class="absolute right-0 w-48 mt-2 origin-top-right glass border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div class="py-2">
+                        <!-- Sunucularım Linki -->
+                        <a href="/guilds" class="flex items-center px-4 py-3 text-sm text-gray-300 hover:bg-blue-600 hover:text-white transition">
+                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4l4 4"></path>
+                            </svg>
+                            Sunucularım
+                        </a>
+                        
+                        <!-- Ayırıcı Çizgi -->
+                        <div class="border-t border-white/5 my-1"></div>
+                        
+                        <!-- Çıkış Yap Linki -->
+                        <a href="/logout" class="flex items-center px-4 py-3 text-sm text-red-400 hover:bg-red-600/20 transition">
+                            <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                            Çıkış Yap
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <% } else { %>
+            <!-- Giriş Yapılmamışsa Görünen Buton -->
+            <a href="/login" class="bg-blue-600 px-5 py-2 rounded-lg font-bold hover:bg-blue-700 transition">Giriş Yap</a>
+        <% } %>
+    </div>
+</nav>
+
+    <!-- Ana Bölüm (Hero) -->
+    <header class="flex flex-col items-center justify-center text-center py-24 px-4">
+        <div class="bg-blue-500/10 text-blue-400 px-4 py-1 rounded-full text-sm font-bold mb-6 border border-blue-500/20">
+            v14 Sürümü Yayında!
+        </div>
+        <h1 class="text-6xl md:text-8xl font-black mb-6 tracking-tight">
+            Legends <span class="gradient-text">Never Die</span>
+        </h1>
+        <p class="text-slate-400 text-lg md:text-xl max-w-2xl leading-relaxed mb-10">
+            Sunucun için en gelişmiş kayıt sistemi ve yüksek güvenlikli moderasyon deneyimi. 
+            v14 altyapısıyla 7/24 kesintisiz hizmet.
+        </p>
+<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
+<a href="https://discord.com/oauth2/authorize?client_id=659809412805820436&permissions=8&scope=bot" 
+   class="bg-blue-600 px-10 py-4 rounded-xl font-bold shadow-lg shadow-blue-600/30 hover:bg-blue-700 hover:scale-105 transition transform">
+   Botu Davet Et
+</a>
+    <!-- Komutları Gör Butonu -->
+<a href="/commands" class="glass px-10 py-4 rounded-xl font-bold hover:bg-slate-800 transition">Komutları Gör</a>
+</div>   
+ </header>
+
+    <!-- İstatistikler -->
+    <section class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 px-6 pb-24">
+        <div class="glass p-8 rounded-3xl text-center">
+            <div class="text-4xl font-black text-white mb-2">20+</div>
+            <div class="text-slate-500 uppercase tracking-widest text-sm font-bold">Sunucu</div>
+        </div>
+        <div class="glass p-8 rounded-3xl text-center border-blue-500/50">
+            <div class="text-4xl font-black text-white mb-2">2000+</div>
+            <div class="text-slate-500 uppercase tracking-widest text-sm font-bold">Kullanıcı</div>
+        </div>
+        <div class="glass p-8 rounded-3xl text-center">
+            <div class="text-4xl font-black text-white mb-2">100+</div>
+            <div class="text-slate-500 uppercase tracking-widest text-sm font-bold">Komut</div>
+        </div>
+    </section>
+
+    <footer class="text-center py-10 border-t border-slate-900 text-slate-600 text-sm">
+        &copy; 2026 LND Bot. Tasarım: senuzulme
+    </footer>
+</body>
+</html>
+<!-- Hero Section: LND Bot Karşılama -->
+<section class="py-24 px-6 relative overflow-hidden bg-[#0f172a]">
+    <!-- Arka plan süsleme ışığı -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/5 blur-[120px] rounded-full"></div>
+
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between relative z-10">
+        
+        <!-- Sol Taraf: Dairesel Şema (Sabit) -->
+        <div class="relative w-[350px] h-[350px] lg:w-[500px] lg:h-[500px] flex items-center justify-center mb-16 lg:mb-0">
+            
+            <!-- Arka Plan Halkaları -->
+            <div class="absolute inset-0 border border-white/[0.03] rounded-full"></div>
+            <div class="absolute inset-16 border border-white/[0.03] rounded-full"></div>
+            <div class="absolute inset-32 border border-white/[0.03] rounded-full"></div>
+
+            <!-- Merkez Logo (L Harfi) -->
+            <div class="relative w-24 h-24 lg:w-32 lg:h-32 bg-[#1e293b] rounded-full flex items-center justify-center shadow-[0_0_50px_-10px_rgba(59,130,246,0.5)] border border-white/10 z-20">
+                <span class="text-5xl lg:text-6xl font-black text-white italic tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">L</span>
+            </div>
+
+            <!-- Etraftaki Modüller (Görseldeki Gibi Dizilim) -->
+            <div class="absolute w-full h-full text-[10px] lg:text-xs font-bold text-gray-400 uppercase tracking-widest">
+                <!-- Üst Orta -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 bg-[#1e293b]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/5 shadow-xl">
+                    Otomatik Moderasyon
+                </div>
+                
+                <!-- Sağ Üst -->
+                <div class="absolute top-[20%] right-[5%] bg-[#1e293b]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/5 shadow-xl">
+                    Emoji Rol
+                </div>
+
+                <!-- Sağ Alt -->
+                <div class="absolute bottom-[30%] right-[-5%] bg-[#1e293b]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/5 shadow-xl">
+                    Özel Bot
+                </div>
+
+                <!-- Alt Orta -->
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 bg-[#1e293b]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/5 shadow-xl">
+                    Otomatik Cevap
+                </div>
+
+                <!-- Sol Alt -->
+                <div class="absolute bottom-[35%] left-[-5%] bg-[#1e293b]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/5 shadow-xl">
+                    Denetim Kaydı
+                </div>
+
+                <!-- Sol Üst -->
+                <div class="absolute top-[25%] left-[0%] bg-[#1e293b]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/5 shadow-xl text-center">
+                    Sunucu Koruma
+                </div>
+            </div>
+        </div>
+
+        <!-- Sağ Taraf: Tanıtım Metni -->
+        <div class="lg:w-1/2 text-center lg:text-left lg:pl-20">
+            <h1 class="text-4xl lg:text-6xl font-black text-white mb-6 tracking-tighter leading-tight">
+                Tamamen <br> Özelleştirilebilir Sistemler
+            </h1>
+            <p class="text-gray-400 text-lg mb-10 max-w-lg leading-relaxed">
+                LND Bot'un moderasyon, güvenlik, denetim kaydı, otorol ve birbirinden çeşitli özellikleriyle sunucunuzu renklendirin.
+            </p>
+            
+            <a href="https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands" 
+               class="inline-flex items-center px-8 py-4 bg-[#5865F2] hover:bg-[#4752C4] text-white font-black rounded-2xl transition shadow-xl shadow-indigo-600/20 transform active:scale-95">
+                <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+                Discord'a ekle
+            </a>
+        </div>
+    </div>
+</section>
+<!-- Üst Düzey Güvenlik Sistemleri Bölümü -->
+<section class="py-20 px-6 bg-[#0f172a]/50">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row-reverse items-center justify-between">
+        
+        <!-- Sağ Taraf (Metin): Üst Düzey Güvenlik -->
+        <div class="lg:w-1/2 text-center lg:text-left mb-16 lg:mb-0 z-10 lg:pl-20">
+            <h2 class="text-5xl lg:text-6xl font-black mb-6 tracking-tighter leading-tight">
+                Üst Düzey <br> 
+                <span class="text-blue-500 italic">Güvenlik</span> Sistemleri
+            </h2>
+            <p class="text-gray-400 text-lg mb-10 max-w-xl leading-relaxed">
+                Discord sunucunuzu her türlü tehlikeye karşı LND Bot'un gelişmiş koruma sistemleri ile tam korumaya alın.
+            </p>
+            
+            <a href="https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands" 
+               class="inline-flex items-center px-10 py-5 bg-[#5865F2] hover:bg-[#4752C4] text-white font-black rounded-2xl transition shadow-2xl shadow-indigo-600/20 transform active:scale-95">
+                <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084-.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+                Discord'a ekle
+            </a>
+        </div>
+
+        <!-- Sol Taraf (Görsel): Koruma Modülleri -->
+        <div class="relative w-[350px] h-[350px] lg:w-[500px] lg:h-[500px] flex items-center justify-center">
+            <!-- Merkez Güvenlik İkonu -->
+            <div class="relative w-28 h-28 lg:w-36 lg:h-36 bg-gradient-to-br from-slate-800 to-slate-900 rounded-[2.5rem] flex items-center justify-center shadow-2xl z-20 border border-white/10">
+                <svg class="w-16 h-16 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+
+            <!-- LND Bot Koruma Komutları (Sabit Dizilim) -->
+            <div class="absolute w-full h-full">
+                <% 
+                   const korumalar = [
+                       { n: 'Kanal Koruma', p: 'top-0 left-1/2 -translate-x-1/2' },
+                       { n: 'Rol Koruma', p: 'top-[15%] right-[2%]' },
+                       { n: ' Reklam Engelleme', p: 'bottom-[15%] right-[2%]' },
+                       { n: 'Jail Sistemi', p: 'bottom-0 left-1/2 -translate-x-1/2' },
+                       { n: ' Sunucu Koruma', p: 'bottom-[15%] left-[2%]' },
+                       { n: ' Yasaklama Yetkilisi', p: 'top-[15%] left-[2%]' }
+                   ];
+                   korumalar.forEach(k => { 
+                %>
+                    <div class="absolute <%= k.p %> bg-slate-900/90 backdrop-blur-sm border border-white/5 px-6 py-3 rounded-2xl shadow-2xl hover:border-blue-500/50 transition-all duration-300">
+                        <span class="text-xs lg:text-sm font-black text-gray-200 whitespace-nowrap uppercase tracking-wider">
+                            <%= k.n %>
+                        </span>
+                    </div>
+                <% }) %>
+            </div>
+
+            <!-- Arka Plan Süsleme Halkaları -->
+            <div class="absolute inset-4 border border-white/5 rounded-full opacity-20"></div>
+            <div class="absolute inset-20 border border-white/5 rounded-full opacity-10 animate-pulse"></div>
+        </div>
+
+    </div>
+</section>
+<!-- Ve Çok Daha Fazlası Bölümü -->
+<section class="py-24 px-6 bg-[#0f172a]">
+    <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl lg:text-4xl font-black mb-16 text-center tracking-tighter text-white">Ve çok daha fazlası...</h2>
+
+        <!-- Üst Sıra: 3'lü Izgara -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-white/5 pb-16 mb-16">
+            
+            <!-- Reklam Engelleme -->
+            <div class="flex flex-col items-center text-center group">
+                <div class="w-12 h-12 mb-6 text-indigo-500 transform group-hover:scale-110 transition duration-300">
+                    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31C15.55 19.37 13.85 20 12 20zm6.31-3.1L7.1 5.69C8.45 4.63 10.15 4 12 4c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z"/></svg>
+                </div>
+                <h3 class="text-xl font-black mb-4 text-white uppercase tracking-widest">Reklam Engelleme</h3>
+                <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+                    Sunucunuzda reklam yapanları anında tespit eder ve otomatik olarak uzaklaştırarak topluluğunuzu korur.
+                </p>
+            </div>
+
+            <!-- Otorol & Ototag -->
+            <div class="flex flex-col items-center text-center group">
+                <div class="w-12 h-12 mb-6 text-indigo-500 transform group-hover:scale-110 transition duration-300">
+                    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>
+                </div>
+                <h3 class="text-xl font-black mb-4 text-white uppercase tracking-widest">Otorol & Ototag</h3>
+                <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+                    Yeni üyelere otomatik roller atar ve sunucu kimliğinize uygun tagları isimlerine anında ekler.
+                </p>
+            </div>
+
+            <!-- Seviye Sistemi -->
+            <div class="flex flex-col items-center text-center group">
+                <div class="w-12 h-12 mb-6 text-indigo-500 transform group-hover:scale-110 transition duration-300">
+                    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                </div>
+                <h3 class="text-xl font-black mb-4 text-white uppercase tracking-widest">Seviye Sistemi</h3>
+                <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+                    Mesaj attıkça XP kazandıran ve seviye atlayan kullanıcılarınız için aktifliği ödüllendiren bir sistem kurun.
+                </p>
+            </div>
+        </div>
+
+        <!-- Alt Sıra: 2'li Izgara -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+            
+            <!-- Karşılama Sistemi -->
+            <div class="flex flex-col items-center text-center group">
+                <div class="w-12 h-12 mb-6 text-indigo-500 transform group-hover:scale-110 transition duration-300">
+                    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <h3 class="text-xl font-black mb-4 text-white uppercase tracking-widest">Karşılama</h3>
+                <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+                    Üyelerinize özel hoş geldin mesajları gönderin ve onları sunucunuza en iyi şekilde dahil edin.
+                </p>
+            </div>
+
+            <!-- Jail Sistemi -->
+            <div class="flex flex-col items-center text-center group">
+                <div class="w-12 h-12 mb-6 text-indigo-500 transform group-hover:scale-110 transition duration-300">
+                    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                </div>
+                <h3 class="text-xl font-black mb-4 text-white uppercase tracking-widest">Jail Sistemi</h3>
+                <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+                    Kuralları ihlal edenleri karantinaya alın ve sunucu düzenini profesyonelce sağlayın.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

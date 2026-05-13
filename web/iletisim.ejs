@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>İletişim | LND Bot</title>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .discord-glow {
+            box-shadow: 0 0 30px rgba(88, 101, 242, 0.2);
+        }
+    </style>
+</head>
+<body class="text-slate-200 selection:bg-indigo-500/30 overflow-hidden">
+
+    <!-- Arka Plan Efektleri -->
+    <div class="fixed inset-0 z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full"></div>
+    </div>
+
+    <main class="relative z-10 min-h-screen flex flex-col items-center justify-center p-6">
+        
+        <div class="w-full max-w-xl">
+            <div class="glass rounded-[2.5rem] p-10 md:p-14 text-center shadow-2xl relative overflow-hidden">
+                
+                <!-- Üst Dekoratif Çizgi -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-50"></div>
+
+                <!-- Profil Logosu -->
+                <div class="relative inline-block mb-8">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-indigo-600 to-blue-500 rounded-[2rem] flex items-center justify-center shadow-2xl rotate-6 hover:rotate-0 transition-all duration-500 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="white" viewBox="0 0 16 16">
+                            <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.248.595.05.05 0 0 0-.023.07c.24.463.513.906.818 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.646 1.612-1.438 1.612Z"/>
+                        </svg>
+                    </div>
+                    <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 border-4 border-[#1e293b] rounded-full"></div>
+                </div>
+
+                <h1 class="text-4xl font-extrabold text-white mb-4 tracking-tight">İletişime Geç</h1>
+                <p class="text-slate-400 mb-10 text-sm leading-relaxed max-w-sm mx-auto">
+                    LND Bot geliştiricisi olarak tüm soru, öneri ve teknik destek taleplerini Discord üzerinden kabul ediyorum.
+                </p>
+
+                <!-- Discord Kartı -->
+                <button onclick="copyDiscord()" class="w-full bg-slate-800/50 hover:bg-slate-800 border border-white/5 p-5 rounded-2xl flex items-center justify-between group transition-all duration-300 active:scale-95 discord-glow">
+                    <div class="flex items-center gap-4 text-left">
+                        <div class="w-12 h-12 bg-[#5865F2]/10 rounded-xl flex items-center justify-center text-[#5865F2] group-hover:bg-[#5865F2] group-hover:text-white transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.248.595.05.05 0 0 0-.023.07c.24.463.513.906.818 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.646 1.612-1.438 1.612Z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mb-1">Kopyalamak için Tıkla</p>
+                            <p class="text-xl font-mono font-bold text-indigo-400 tracking-tight">senuzulme</p>
+                        </div>
+                    </div>
+                    <div id="copyIcon" class="text-slate-600 group-hover:text-indigo-400 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    </div>
+                </button>
+
+                <p id="status" class="mt-6 text-xs text-green-400 font-bold opacity-0 transition-all duration-300 transform translate-y-2">Kullanıcı adı başarıyla kopyalandı!</p>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <a href="/" class="group inline-flex items-center gap-3 text-slate-500 hover:text-white transition-all duration-300">
+                    <span class="w-8 h-[1px] bg-slate-800 group-hover:w-12 group-hover:bg-indigo-500 transition-all"></span>
+                    <span class="text-xs font-bold uppercase tracking-widest">Ana Sayfaya Dön</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function copyDiscord() {
+            navigator.clipboard.writeText("senuzulme").then(() => {
+                const status = document.getElementById('status');
+                status.classList.remove('opacity-0', 'translate-y-2');
+                status.classList.add('opacity-100', 'translate-y-0');
+                
+                setTimeout(() => {
+                    status.classList.add('opacity-0', 'translate-y-2');
+                    status.classList.remove('opacity-100', 'translate-y-0');
+                }, 3000);
+            });
+        }
+    </script>
+</body>
+</html>

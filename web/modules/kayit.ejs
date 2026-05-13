@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>LND Bot | Kayıt Sistemi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="p-10">
+    <div class="max-w-4xl mx-auto">
+        <!-- Üst Navigasyon -->
+        <div class="mb-6">
+            <a href="/manage/<%= guild.id %>" class="text-blue-400 hover:text-blue-300 transition flex items-center font-medium">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Yönetim Paneline Dön
+            </a>
+        </div>
+
+        <h1 class="text-4xl font-black mt-4 mb-8 text-blue-500 tracking-tighter">📝 Kayıt Sistemi Ayarları</h1>
+
+        <div class="grid gap-8">
+            <!-- 1. Sistem Durumu (Aç/Kapat) -->
+            <div class="glass p-8 rounded-3xl border border-white/10 shadow-2xl text-center">
+                <label class="block text-sm font-bold text-gray-400 mb-4 uppercase tracking-widest text-left">Sistem Durumu</label>
+                <% 
+                   const suankiDurum = db.get(`kayit_sistemi_${guild.id}`);
+                   const isEnabled = suankiDurum === 'acik' || suankiDurum === true;
+                %>
+                <button onclick="durumGuncelle('<%= isEnabled ? 'kapali' : 'acik' %>')" 
+                    class="w-full py-5 <%= isEnabled ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700' %> rounded-2xl font-black text-xl transition transform active:scale-95 shadow-lg">
+                    <%= isEnabled ? 'SİSTEMİ TAMAMEN KAPAT' : 'SİSTEMİ ETKİNLEŞTİR' %>
+                </button>
+            </div>
+
+            <!-- 2. Kayıt Ayarları -->
+            <div class="glass p-8 rounded-3xl border border-white/10 shadow-2xl space-y-6">
+                <!-- Kayıt Kanalı -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">Kayıt Kanalı</label>
+                    <select id="kayit_kanal" class="w-full bg-slate-800 border border-white/10 p-4 rounded-xl outline-none focus:border-blue-500 transition text-white">
+                        <option value="">Kanal Seçilmemiş</option>
+                        <% guild.channels.cache.filter(c => c.type === 0).forEach(c => { %>
+                            <option value="<%= c.id %>" <%= db.get(`kayit_kanal_${guild.id}`) === c.id ? 'selected' : '' %>># <%= c.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <!-- Kayıt Rolü -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-400 mb-3 uppercase tracking-widest">Verilecek Rol</label>
+                    <select id="kayit_rol" class="w-full bg-slate-800 border border-white/10 p-4 rounded-xl outline-none focus:border-blue-500 transition text-white">
+                        <option value="">Rol Seçilmemiş</option>
+                        <% guild.roles.cache.filter(r => r.name !== '@everyone').forEach(r => { %>
+                            <option value="<%= r.id %>" <%= db.get(`kayit_rol_${guild.id}`) === r.id ? 'selected' : '' %>><%= r.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <button onclick="kaydet()" class="w-full py-5 bg-blue-600 rounded-2xl font-black text-xl hover:bg-blue-700 transition shadow-lg shadow-blue-600/20 transform active:scale-95">
+                    AYARLARI GÜNCELLE
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sadece Durum Değiştirme
+        function durumGuncelle(yeniDeger) {
+            fetch(`/manage/<%= guild.id %>/save`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify([
+                    { tip: 'kayit_sistemi', deger: yeniDeger }
+                ])
+            }).then(res => {
+                if(res.ok) {
+                    alert('Kayıt sistemi durumu güncellendi!');
+                    location.reload();
+                }
+            });
+        }
+
+        // Genel Kayıt Fonksiyonu
+        function kaydet() {
+            const kanal = document.getElementById('kayit_kanal').value;
+            const rol = document.getElementById('kayit_rol').value;
+
+            if(!kanal || !rol) return alert('Lütfen kanal ve rol seçimini yap Hido!');
+
+            fetch(`/manage/<%= guild.id %>/save`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify([
+                    { tip: 'kayit_kanal', deger: kanal },
+                    { tip: 'kayit_rol', deger: rol },
+                    { tip: 'kayit_sistemi', deger: 'acik' } // Kaydedince otomatik açılır
+                ])
+            }).then(res => {
+                if(res.ok) {
+                    alert('Kayıt sistemi ayarları başarıyla kaydedildi!');
+                    location.reload();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

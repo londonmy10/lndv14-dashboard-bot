@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>LND Bot | Komutlar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+        body { background: #0f172a; color: white; }
+    </style>
+</head>
+<body class="p-10">
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-center mb-10">
+            <h1 class="text-3xl font-bold text-blue-500">Legends Never Die</h1>
+            <a href="/" class="text-gray-400 hover:text-white">← Ana Sayfaya Dön</a>
+        </header>
+
+        <h2 class="text-4xl font-black mb-8">Bot Komutları</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% commands.forEach(cmd => { %>
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-blue-500/50 transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-blue-400 font-mono text-lg font-bold">&<%= cmd.name %></span>
+                        <span class="bg-blue-600/20 text-blue-400 text-xs px-3 py-1 rounded-full uppercase"><%= cmd.kategori %></span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        <%= cmd.description %>
+                    </p>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</body>
+</html>

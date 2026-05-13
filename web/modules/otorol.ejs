@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>LND Bot | Otorol & Ototag</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="p-10">
+    <div class="max-w-5xl mx-auto">
+        <!-- Üst Menü -->
+        <div class="mb-6">
+            <a href="/manage/<%= guild.id %>" class="text-blue-400 hover:text-blue-300 transition flex items-center font-medium">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Yönetim Paneline Dön
+            </a>
+        </div>
+
+        <h1 class="text-4xl font-black mb-10 text-yellow-500 tracking-tighter">🏷️ Otorol ve Ototag Yönetimi</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- 1. OTOROL AYAR KARTI -->
+            <div class="glass p-8 rounded-3xl border border-white/10 shadow-2xl flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <h2 class="text-2xl font-black text-white">👤 Otorol Sistemi</h2>
+                        <% 
+                           const otorolDurum = db.get(`otorol_sistemi_${guild.id}`);
+                           const isOtorolEnabled = otorolDurum === 'acik' || otorolDurum === true;
+                        %>
+                        <span class="px-3 py-1 <%= isOtorolEnabled ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' %> text-[10px] font-bold rounded-full border border-current">
+                            <%= isOtorolEnabled ? 'AKTİF' : 'DEVRE DIŞI' %>
+                        </span>
+                    </div>
+                    
+                    <!-- Rol Seçimi -->
+                    <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">Verilecek Rol</label>
+                    <select id="otorol_select" class="w-full bg-slate-800 border border-white/10 p-4 rounded-xl outline-none focus:border-yellow-500 transition text-white mb-6">
+                        <option value="">Rol Seçilmemiş</option>
+                        <% guild.roles.cache.filter(r => r.name !== '@everyone').forEach(r => { %>
+                            <option value="<%= r.id %>" <%= db.get(`otorol_${guild.id}`) === r.id ? 'selected' : '' %>><%= r.name %></option>
+                        <% }) %>
+                    </select>
+
+                    <!-- Kanal Seçimi (Yeni Eklendi) -->
+                    <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">Otorol Mesaj Kanalı</label>
+                    <select id="otorol_kanal" class="w-full bg-slate-800 border border-white/10 p-4 rounded-xl outline-none focus:border-yellow-500 transition text-white mb-6">
+                        <option value="">Mesaj Gönderilmesin</option>
+                        <% guild.channels.cache.filter(c => c.type === 0).forEach(c => { %>
+                            <option value="<%= c.id %>" <%= db.get(`otorol_kanal_${guild.id}`) === c.id ? 'selected' : '' %>># <%= c.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="kaydet('otorol')" class="w-full py-4 bg-yellow-600 hover:bg-yellow-700 text-black font-black rounded-2xl transition transform active:scale-95 shadow-lg">
+                        OTOROLÜ KAYDET VE AÇ
+                    </button>
+                    <% if(isOtorolEnabled) { %>
+                        <button onclick="kapat('otorol')" class="w-full py-3 bg-white/5 hover:bg-red-600/20 border border-white/10 text-red-400 font-bold rounded-2xl transition">
+                            SADECE OTOROLÜ KAPAT
+                        </button>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- 2. OTOTAG AYAR KARTI -->
+            <div class="glass p-8 rounded-3xl border border-white/10 shadow-2xl flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <h2 class="text-2xl font-black text-white">✍️ Ototag Sistemi</h2>
+                        <% 
+                           const ototagDurum = db.get(`ototag_sistemi_${guild.id}`);
+                           const isOtotagEnabled = ototagDurum === 'acik' || ototagDurum === true;
+                        %>
+                        <span class="px-3 py-1 <%= isOtotagEnabled ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' %> text-[10px] font-bold rounded-full border border-current">
+                            <%= isOtotagEnabled ? 'AKTİF' : 'DEVRE DIŞI' %>
+                        </span>
+                    </div>
+
+                    <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">Kullanılacak Tag</label>
+                    <input type="text" id="ototag_input" value="<%= db.get(`ototag_${guild.id}`) || '' %>" placeholder="Örn: LND |"
+                           class="w-full bg-slate-800 border border-white/10 p-4 rounded-xl outline-none focus:border-yellow-500 transition text-white mb-4">
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="kaydet('ototag')" class="w-full py-4 bg-yellow-600 hover:bg-yellow-700 text-black font-black rounded-2xl transition transform active:scale-95 shadow-lg">
+                        OTOTAGI KAYDET VE AÇ
+                    </button>
+                    <% if(isOtotagEnabled) { %>
+                        <button onclick="kapat('ototag')" class="w-full py-3 bg-white/5 hover:bg-red-600/20 border border-white/10 text-red-400 font-bold rounded-2xl transition">
+                            SADECE OTOTAGI KAPAT
+                        </button>
+                    <% } %>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function kaydet(tur) {
+            const veri = [];
+            if(tur === 'otorol') {
+                const rol = document.getElementById('otorol_select').value;
+                const kanal = document.getElementById('otorol_kanal').value;
+                if(!rol) return alert('Hido, önce bir rol seçmelisin!');
+                
+                veri.push({ tip: 'otorol', deger: rol });
+                veri.push({ tip: 'otorol_kanal', deger: kanal }); // Kanal verisi
+                veri.push({ tip: 'otorol_sistemi', deger: 'acik' });
+            } else {
+                const tag = document.getElementById('ototag_input').value;
+                if(!tag) return alert('Hido, bir tag yazmalısın!');
+                veri.push({ tip: 'ototag', deger: tag });
+                veri.push({ tip: 'ototag_sistemi', deger: 'acik' });
+            }
+
+            fetch(`/manage/<%= guild.id %>/save`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(veri)
+            }).then(res => {
+                if(res.ok) {
+                    alert(tur.toUpperCase() + ' ayarları güncellendi!');
+                    location.reload();
+                }
+            });
+        }
+
+        function kapat(tur) {
+            fetch(`/manage/<%= guild.id %>/save`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify([{ tip: tur + '_sistemi', deger: 'kapali' }])
+            }).then(() => location.reload());
+        }
+    </script>
+</body>
+</html>

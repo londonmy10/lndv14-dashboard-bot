@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>LND Bot | Emoji Rol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+        .input-dark { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; outline: none; }
+        .input-dark:focus { border-color: #6366f1; }
+    </style>
+</head>
+       <body class="p-10">
+        <!-- Üst Navigasyon -->
+        <div class="mb-6">
+            <a href="/manage/<%= guild.id %>" class="text-blue-400 hover:text-blue-300 transition flex items-center font-medium">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Yönetim Paneline Dön
+            </a>
+        </div>
+    <div class="max-w-6xl mx-auto">
+        <!-- Başlık Bölümü -->
+        <div class="mb-10">
+            <h1 class="text-3xl font-black mb-2 tracking-tighter">Emoji Rol</h1>
+            <p class="text-gray-400">Üyelerin mesajlara tepki vererek rol almasını sağlar</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-8">
+            <!-- Yeni Emoji Rol Oluşturma Kartı -->
+            <div class="glass p-8 rounded-3xl border border-white/10 shadow-2xl">
+                <div class="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
+                    <h3 class="text-xl font-bold italic">Yeni emoji rol oluştur</h3>
+                    <span class="text-blue-400 text-2xl">+</span>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest">Tepki Türü</label>
+                        <div class="flex gap-3">
+                            <button class="px-6 py-2 bg-indigo-600 rounded-lg text-sm font-bold">Mevcut mesaj</button>
+                            <button class="px-6 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm font-bold transition">Yeni mesaj (Yakında)</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">Kanal</label>
+                            <select id="kanal_select" class="w-full input-dark">
+                                <option value="">Bir kanal seçin</option>
+                                <% guild.channels.cache.filter(c => c.type === 0).forEach(c => { %>
+                                    <option value="<%= c.id %>"># <%= c.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">Mesaj ID</label>
+                            <input type="text" id="mesaj_id" placeholder="Mesaj ID girin" class="w-full input-dark">
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-xl flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="text-yellow-500 text-xl">⚠️</span>
+                            <p class="text-sm text-yellow-200/80 italic">Bu özelliğin çalışabilmesi için botun rolünü en üste taşımayı unutmayınız</p>
+                        </div>
+                        <a href="#" class="text-yellow-500 text-xs font-bold underline">Nasıl yapılır?</a>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">Emoji</label>
+                            <input type="text" id="emoji_input" placeholder="Emoji (Örn: 😂)" class="w-full input-dark text-center text-xl">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">Verilecek Roller (Üye)</label>
+                            <select id="verilecek_rol" class="w-full input-dark">
+                                <option value="">Rol seçin</option>
+                                <% guild.roles.cache.filter(r => r.name !== '@everyone').forEach(r => { %>
+                                    <option value="<%= r.id %>"><%= r.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">Alınacak Roller (Kayıt)</label>
+                            <select id="alinacak_rol" class="w-full input-dark">
+                                <option value="">Rol seçin</option>
+                                <% guild.roles.cache.filter(r => r.name !== '@everyone').forEach(r => { %>
+                                    <option value="<%= r.id %>"><%= r.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button onclick="sistemiKur()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 rounded-2xl font-black transition transform active:scale-95 shadow-xl shadow-indigo-600/20">
+                        SİSTEMİ KUR VE KAYDET
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mevcut Emoji Roller Listesi -->
+            <div class="mt-10">
+                <h3 class="text-lg font-bold mb-6 text-gray-400">Emoji rollerin</h3>
+                <div class="grid gap-4">
+<%
+    // Veritabanındaki tüm verileri çekiyoruz
+    const tumVeriler = db.all(); 
+    
+    // Filtreleme: Sadece "emojiSistemi_" ile başlayan VE sonu mevcut sunucu ID'si ile bitenleri al
+    const mevcutlar = Object.keys(tumVeriler)
+        .filter(key => key.startsWith(`emojiSistemi_`) && key.endsWith(`_${guild.id}`))
+        .map(key => ({ ID: key, data: tumVeriler[key] }));
+
+    if(mevcutlar.length === 0) {
+%>
+    <div class="glass p-6 rounded-2xl text-center italic text-gray-500">Bu sunucu için henüz hiç emoji rol kurulmamış.</div>
+<% } else { 
+    mevcutlar.forEach(item => { 
+        // ID formatımız: emojiSistemi_123456789_987654321
+        // Split ile sadece Mesaj ID'sini çekiyoruz
+        const mesajId = item.ID.split('_')[1];
+        const data = item.data;
+        
+        const vRolIsim = guild.roles.cache.get(data.verilecek)?.name || "Silinmiş Rol";
+        const aRolIsim = guild.roles.cache.get(data.alinacak)?.name || "Silinmiş Rol";
+%>
+    <div class="glass p-6 rounded-2xl border border-white/5 flex justify-between items-center group hover:border-indigo-500/30 transition mb-4">
+        <div class="flex items-center gap-6">
+            <span class="text-2xl"><%= data.emoji %></span>
+            <div>
+                <p class="text-xs font-bold text-gray-500 uppercase mb-1">MESAJ ID: <%= mesajId %></p>
+                <div class="flex items-center gap-2">
+                    <span class="bg-green-500/10 text-green-400 text-[10px] px-2 py-1 rounded-md border border-green-500/20">+ <%= vRolIsim %></span>
+                    <span class="text-gray-600">➔</span>
+                    <span class="bg-red-500/10 text-red-400 text-[10px] px-2 py-1 rounded-md border border-red-500/20">- <%= aRolIsim %></span>
+                </div>
+            </div>
+        </div>
+<div class="flex gap-2">
+    <!-- Buradaki item.ID, 'emojiSistemi_MESAJID_SUNUCUID' şeklindedir -->
+    <button onclick="sil('<%= item.ID %>')" class="p-3 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl transition">
+        🗑️
+    </button>
+</div>
+    </div>
+<% }); } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+function sistemiKur() {
+    const mId = document.getElementById('mesaj_id').value;
+    const emoji = document.getElementById('emoji_input').value;
+    const vRol = document.getElementById('verilecek_rol').value;
+    const aRol = document.getElementById('alinacak_rol').value;
+
+    if(!mId || !emoji || !vRol || !aRol) return alert('Kullanıcı, tüm alanları doldurman gerekiyor!');
+
+    fetch(`/manage/<%= guild.id %>/save`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify([{
+            // BURASI KRİTİK: Sunucu ID'sini de ekliyoruz
+            tip: `emojiSistemi_${mId}_<%= guild.id %>`, 
+            deger: { emoji, verilecek: vRol, alinacak: aRol }
+        }])
+    }).then(() => {
+        alert('Emoji rol sistemi kuruldu!');
+        location.reload();
+    });
+}
+function sil(fullId) {
+    if(!confirm('Bu emoji rol sistemini silmek istediğine emin misin?')) return;
+    
+    fetch(`/manage/<%= guild.id %>/save`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify([{ 
+            tip: fullId, // Tam anahtarı gönderiyoruz
+            sil: true    // Silme işlemini tetikliyoruz
+        }])
+    }).then(res => {
+        if(res.ok) {
+            alert('Sistem başarıyla kaldırıldı!');
+            location.reload();
+        }
+    });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>LND Bot | Sunucularım</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+        body { background: #0f172a; color: white; }
+    </style>
+</head>
+<body class="p-10">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- Ana Sayfaya Dönüş Butonu -->
+        <div class="mb-8">
+            <a href="/" class="inline-flex items-center text-gray-400 hover:text-blue-500 transition-all duration-300 group">
+                <svg class="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                <span class="font-medium">Ana Sayfaya Dön</span>
+            </a>
+        </div>
+
+        <h2 class="text-4xl font-black mb-10 tracking-tighter">Sunucularını <span class="text-blue-500">Yönet</span></h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <% guilds.forEach(guild => { %>
+                <div class="glass p-6 rounded-3xl border border-white/10 flex flex-col items-center hover:border-blue-500/50 transition duration-300">
+                    <% if(guild.icon) { %>
+                        <img src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png" class="w-24 h-24 rounded-full mb-4 shadow-xl border-4 border-white/5">
+                    <% } else { %>
+                        <div class="w-24 h-24 rounded-full bg-blue-600 flex items-center justify-center text-3xl font-bold mb-4"><%= guild.name.charAt(0) %></div>
+                    <% } %>
+
+                    <h3 class="font-bold text-xl text-center mb-6 truncate w-full"><%= guild.name %></h3>
+
+                    <% if (client.guilds.cache.has(guild.id)) { %>
+                        <a href="/manage/<%= guild.id %>" class="bg-green-600 px-8 py-3 rounded-xl text-sm font-bold hover:bg-green-700 transition w-full text-center">Yönet</a>
+                    <% } else { %>
+                        <!-- Linkteki hata düzeltildi -->
+                        <a href="https://discord.com/oauth2/authorize?client_id=659809412805820436&scope=bot&permissions=8&guild_id=<%= guild.id %>" class="bg-blue-600 px-8 py-3 rounded-xl text-sm font-bold hover:bg-blue-700 transition w-full text-center">Botu Ekle</a>
+                    <% } %>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</body>
+</html>

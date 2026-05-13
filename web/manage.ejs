@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title><%= guild.name %> | Yönetim Paneli</title>
+    <style>
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+        body { background: #0f172a; color: white; min-height: 100vh; font-family: sans-serif; }
+    </style>
+</head>
+<body class="p-6 md:p-10 selection:bg-blue-500/30">
+    <div class="max-w-6xl mx-auto">
+
+        <div class="flex justify-between items-center mb-8">
+            <a href="/guilds" class="text-gray-400 hover:text-white transition flex items-center group">
+                <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Sunucularıma Dön
+            </a>
+            <div class="text-sm font-bold text-blue-500 uppercase tracking-widest">LND Dashboard v14</div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-6 mb-12">
+            <div class="flex-grow flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 bg-white/5 p-8 rounded-3xl border border-white/10 shadow-2xl">
+                <% if(guild.icon) { %>
+                    <img src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png" class="w-24 h-24 rounded-3xl shadow-2xl border-2 border-blue-500 transform hover:scale-105 transition">
+                <% } else { %>
+                    <div class="w-24 h-24 rounded-3xl bg-blue-600 flex items-center justify-center text-4xl font-black border-2 border-white/10"><%= guild.name.charAt(0) %></div>
+                <% } %>
+                <div class="text-center md:text-left">
+                    <h1 class="text-4xl font-black tracking-tighter text-white"><%= guild.name %></h1>
+                    <div class="flex items-center justify-center md:justify-start space-x-2 mt-2">
+                        <span class="px-3 py-1 bg-green-500/10 text-green-400 text-xs font-bold rounded-full border border-green-500/20">AKTİF</span>
+                        <p class="text-gray-500 text-sm font-mono">ID: <%= guild.id %></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-6 rounded-3xl border border-white/10 flex items-center gap-5 min-w-[280px] hover:border-indigo-500/50 transition-all duration-300 group">
+                <div class="w-12 h-12 bg-[#5865F2]/10 rounded-2xl flex items-center justify-center text-[#5865F2] group-hover:bg-[#5865F2] group-hover:text-white transition-all duration-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.248.595.05.05 0 0 0-.023.07c.24.463.513.906.818 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.646 1.612-1.438 1.612Z"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] mb-1">Geliştirici</p>
+                    <p class="text-xl font-black text-white tracking-tight group-hover:text-indigo-400 transition-colors">senuzulme</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4 mb-10">
+            <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-black text-white tracking-tight">Sunucu Yönetim Modülleri</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <%
+            const sistemler = [
+                { id: 'jail', name: 'Jail Sistemi', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 22H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h4"/><rect width="14" height="20" x="7" y="2" rx="2"/><path d="M12 11v2"/></svg>', desc: 'Kural ihlali yapanları hapse atın.', key: 'jail_sistemi' },
+                { id: 'koruma', name: 'Kanal & Rol Koruma', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>', desc: 'Saldırılara karşı sunucuyu koruyun.', key: 'koruma_sistemi' },
+                { id: 'kayit', name: 'Kayıt Sistemi', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>', desc: 'Gelişmiş kullanıcı kayıt sistemi.', key: 'kayit_sistemi' },
+                { id: 'otorol', name: 'Otorol & Ototag', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/></svg>', desc: 'Otomatik rol ve tag verme ayarları.', key: 'otorol_sistemi' },
+                { id: 'reklam', name: 'Reklam Kick', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>', desc: 'Reklam yapanları otomatik uzaklaştırın.', key: 'reklam_engelle' },
+                { id: 'seviye', name: 'Seviye Sistemi', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>', desc: 'Aktiflik bazlı XP ve seviye sistemi.', key: 'seviye_sistemi' },
+                { id: 'yetkili', name: 'Yasaklama Yetkilisi', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m21 2-5 5m0-5 5 5"/></svg>', desc: 'Ban yetkilisi rollerini belirleyin.', key: 'ban_yetkilisi_sistemi' },
+                { id: 'otocevap', name: 'Otomatik Cevap', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>', desc: 'Otomatik yanıt sistemini yönetin.', key: 'otocevap_sistemi' },
+                { id: 'emojirol', name: 'Emoji Rol', icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>', desc: 'Emoji ile otomatik rol verme sistemi.', link: '/manage/' + guild.id + '/emojirol' }
+            ];
+
+            sistemler.forEach(s => {
+                const dbVerisi = db.get(`${s.key}_${guild.id}`);
+                let durum = (dbVerisi === 'acik' || dbVerisi === true) ? 'Açık' : 'Kapalı';
+                const durumRenk = durum === 'Açık' ? 'text-green-400' : 'text-red-400';
+            %>
+                <div class="glass p-8 rounded-3xl border border-white/10 hover:border-blue-500/50 transition-all duration-300 group relative">
+                    <div class="absolute top-4 right-4 text-[10px] font-black uppercase tracking-widest <%= durumRenk %>">
+                        ● <%= durum %>
+                    </div>
+                    <div class="text-4xl mb-6 bg-white/5 w-16 h-16 flex items-center justify-center rounded-2xl group-hover:scale-110 transition duration-500">
+                        <%- s.icon %>
+                    </div>
+                    <h3 class="text-xl font-black mb-3 group-hover:text-blue-400 transition"><%= s.name %></h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-8 h-10 overflow-hidden"><%= s.desc %></p>
+                    <a href="<%= s.link || '/manage/' + guild.id + '/' + s.id %>" class="flex items-center justify-center w-full py-4 bg-white/5 border border-white/10 rounded-2xl font-bold group-hover:bg-blue-600 group-hover:border-blue-500 transition-all">
+                        Ayarları Düzenle
+                    </a>
+                </div>
+            <% }); %>
+        </div>
+
+        <div class="mt-20 flex flex-col md:flex-row items-center justify-between p-10 glass rounded-[2.5rem] border border-white/10 gap-8">
+            <div class="text-center md:text-left">
+                <h2 class="text-2xl font-black mb-2 italic text-white">Bir sorun mu var?</h2>
+                <p class="text-gray-400 text-sm">Doğrudan geliştiriciye ulaşmak için butona tıkla.</p>
+            </div>
+            <a href="/iletisim" class="px-10 py-5 bg-blue-600 hover:bg-blue-500 rounded-2xl font-black transition shadow-lg text-white">İletişime Geç</a>
+        </div>
+
+        <div class="mt-16 text-center text-gray-500 text-xs font-medium uppercase tracking-widest pb-10">
+            Legends Never Die Bot © 2026 | senuzulme
+        </div>
+    </div>
+</body>
+</html>

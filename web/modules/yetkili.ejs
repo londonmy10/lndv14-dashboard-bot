@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LND Bot | Yasaklama Yetkilisi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="p-10">
+    <div class="max-w-4xl mx-auto">
+        <!-- Geri Dönüş -->
+        <div class="mb-6">
+            <a href="/manage/<%= guild.id %>" class="text-blue-400 hover:text-blue-300 transition flex items-center font-medium">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Yönetim Paneline Dön
+            </a>
+        </div>
+
+        <h1 class="text-4xl font-black mb-8 text-indigo-500 tracking-tighter">🔨 Yasaklama Yetkilisi</h1>
+
+        <div class="grid gap-8">
+            <!-- Rol Seçim Kartı -->
+            <div class="glass p-8 rounded-3xl border border-white/10 shadow-2xl">
+                <label class="block text-sm font-bold text-gray-400 mb-4 uppercase tracking-widest">Ban Yetkilisi Rolü</label>
+                <p class="text-sm text-gray-500 mb-6 italic">Bu role sahip kullanıcılar sunucunuzda yasaklama (ban/unban) komutlarını kullanabilirler.</p>
+
+                <select id="ban_yetkilisi" class="w-full bg-slate-800 border border-white/10 p-4 rounded-xl outline-none focus:border-indigo-500 transition text-white">
+                    <option value="">Rol Seçilmemiş</option>
+                    <% guild.roles.cache.filter(r => r.name !== '@everyone').forEach(r => { %>
+                        <option value="<%= r.id %>" <%= db.get(`ban_yetkilisi_${guild.id}`) === r.id ? 'selected' : '' %>><%= r.name %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <!-- Kaydet Butonu -->
+            <button onclick="yetkiliKaydet()" class="py-5 bg-indigo-600 rounded-2xl font-black text-xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/20 transform active:scale-95">
+                AYARI KAYDET
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function yetkiliKaydet() {
+            const rol = document.getElementById('ban_yetkilisi').value;
+
+            // Çoklu veri gönderimi: Hem rol ID'sini hem de sistemin durumunu (true/false) gönderiyoruz.
+            fetch(`/manage/<%= guild.id %>/save`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify([
+                    { tip: 'ban_yetkilisi', deger: rol },
+                    { tip: 'ban_yetkilisi_sistemi', deger: rol ? true : false }
+                ])
+            }).then(res => {
+                if (res.ok) {
+                    alert('Yasaklama yetkilisi ve sistem durumu başarıyla güncellendi!');
+                    location.reload(); // Değişikliklerin kutuya yansıması için sayfayı yeniler.
+                } else {
+                    alert('Hata: Ayarlar kaydedilemedi. bot.js dosyasındaki /save rotasını kontrol et!');
+                }
+            }).catch(err => {
+                console.error('Fetch Hatası:', err);
+                alert('Sunucuyla bağlantı kurulamadı!');
+            });
+        }
+    </script>
+</body>
+</html>
