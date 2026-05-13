@@ -1,6 +1,6 @@
 # lndv14-dashboard-bot
 
 Web Panel Düzeni
-//Passport Stratejisi kısmından gerekli olanları düzenleyip web dosyasından kendinize ait ayarları yapabilirsiniz.
+bot.jsde Passport Stratejisini aratın. Gerekli olanları düzenleyip web dosyasından kendinize ait ayarları yapabilirsiniz.
 
 Dc : senuzulme
